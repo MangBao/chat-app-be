@@ -1,4 +1,6 @@
-ALTER USER "Bao Mang" WITH SUPERUSER;
+--# psql -U postgres -d chat_app
+
+CREATE DATABASE chat_app;
 
 CREATE TABLE users(
     id SERIAL PRIMARY KEY,

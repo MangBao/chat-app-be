@@ -15,13 +15,12 @@ const validateForm = (req, res) => {
   const formData = req.body;
   formSchema
     .validate(formData)
-    .catch((err) => {
+    .catch(err => {
       res.status(422).send();
       console.log(err.errors);
     })
-    .then((valid) => {
+    .then(valid => {
       if (valid) {
-        res.status(200).send();
         console.log("form is good");
       }
     });

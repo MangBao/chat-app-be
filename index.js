@@ -6,7 +6,7 @@ const authRouter = require("./routers/authRouter");
 const session = require("express-session");
 const app = express();
 const server = require("http").createServer(app);
-require("dotenv").configure();
+require("dotenv").config();
 
 const io = new Server(server, {
   cors: {
