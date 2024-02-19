@@ -1,11 +1,16 @@
 const express = require("express");
-const { Server } = require("socket.io");
 const cors = require("cors");
+const session = require("express-session");
+
+const { Server } = require("socket.io");
+
+const app = express();
 const helmet = require("helmet");
 const authRouter = require("./routers/authRouter");
-const session = require("express-session");
-const app = express();
+const Redis = require("ioredis");
 const server = require("http").createServer(app);
+const RedisStore = require("connect-redis")(session);
+
 require("dotenv").config();
 
 const io = new Server(server, {
@@ -15,6 +20,8 @@ const io = new Server(server, {
   },
 });
 
+const redisClient = new Redis();
+
 app.use(helmet());
 app.use(
   cors({
@@ -22,12 +29,15 @@ app.use(
     credentials: true,
   })
 );
+
 app.use(express.json());
+
 app.use(
   session({
     secret: process.env.COOKIE_SECRET,
     credentials: true,
     name: "sid",
+    store: new RedisStore({ client: redisClient }),
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -38,6 +48,7 @@ app.use(
     },
   })
 );
+
 app.use("/auth", authRouter);
 
 io.on("connect", (socket) => {});
