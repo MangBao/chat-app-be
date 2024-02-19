@@ -7,8 +7,8 @@ const { Server } = require("socket.io");
 const app = express();
 const helmet = require("helmet");
 const authRouter = require("./routers/authRouter");
-const Redis = require("ioredis");
 const server = require("http").createServer(app);
+const redisClient = require("./redis")
 const RedisStore = require("connect-redis")(session);
 
 require("dotenv").config();
@@ -19,8 +19,6 @@ const io = new Server(server, {
     credentials: "true",
   },
 });
-
-const redisClient = new Redis();
 
 app.use(helmet());
 app.use(
