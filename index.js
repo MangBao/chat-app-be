@@ -11,6 +11,7 @@ const {
   wrap,
   corsConfig,
 } = require("./controllers/serverController");
+const { authorizeUser } = require("./controllers/socketController");
 const server = require("http").createServer(app);
 
 const io = new Server(server, {
@@ -25,8 +26,15 @@ app.use(sessionMiddleware);
 app.use("/auth", authRouter);
 
 io.use(wrap(sessionMiddleware));
+io.use(authorizeUser);
 io.on("connect", (socket) => {
-  console.log(socket.request.session.user.username);
+  console.log(
+    "UserID: ",
+    socket.user.userid,
+    "\nUserName: ",
+    socket.user.username
+  );
+  // console.log(socket.request.session.user.username);
 });
 
 server.listen(3001, () => {
